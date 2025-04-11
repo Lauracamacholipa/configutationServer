@@ -1,0 +1,37 @@
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "4318:4318"
+    environment:
+      - LOG_LEVEL=debug
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - my-network
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ms_product
+    ports:
+      - "3306:3306"
+    networks:
+      - my-network
+  ms-product:
+    image: ms-product:latest
+    ports:
+      - "9090:9090"
+    environment:
+      PORT: 9090
+    networks:
+      - my-network
+  apigateway:
+    image: apigateway:latest
+    ports:
+      - "9191:8080"
+    networks:
+      - my-network
+networks:
+  my-network:
+    driver: "bridge"
